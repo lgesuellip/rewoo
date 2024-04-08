@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "rewoo"
+version = "0.1.0"
+description = "ReWOO"
+authors = ["Lautaro GP"]
+readme = "README.md"
+packages = [
+    { include = "core" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+langchain = "^0.1.12"
+langchain-core = "^0.1.33-rc.1"
+langchain_community = "^0.0.28"
+langchain_openai = "^0.0.8"
+langgraph = "^0.0.28"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
