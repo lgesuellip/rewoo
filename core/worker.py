@@ -5,15 +5,16 @@ from core.scheduler import Executor
 
 def worker_agent(state: ReWOO):
 
-    worker = Worker(state["tools"])
-    worker.invoke(state["planner"].plans)
+    state["worker"].invoke(tools=state["tools"], plans=state["planner"].plans)
 
     return state
 
+
 class Worker:
 
-    def __init__(self, tools) -> None:
-        self.scheduler = Executor(tools)
+    def __init__(self, scheduler: Executor) -> None:
+        self.scheduler = scheduler
 
-    def invoke(self, plans: List[Plan]):
+    def invoke(self, tools: List, plans: List[Plan]):
+        self.scheduler.set_space(tools)
         self.scheduler.execute(plans)

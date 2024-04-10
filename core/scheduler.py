@@ -4,15 +4,16 @@ from core.plan import Plan
 
 
 class Executor:
+    def __init__(self) -> None:
+        self._tools_map = None
 
-    def __init__(self, tools: List) -> None:
-        self.tools_map = {tool.name: tool for tool in tools}
+    def set_space(self, tools):
+        self._tools_map = {tool.name: tool for tool in tools}
 
     def execute(self, plans: List[Plan]):
-
         for plan in plans.values():
             args = plan["args"]
-            for idx in re.findall(r"#E\d+", plan["args"]):
+            for idx in re.findall(r"#E\d+", args):
                 if "evidence" in plans[idx]:
-                    args = plan["args"].replace(idx, plans[idx]["evidence"])
-            plan["evidence"] = self.tools_map[plan["tool_name"]].invoke(args)
+                    args = args.replace(idx, plans[idx]["evidence"])
+            plan["evidence"] = str(self._tools_map[plan["tool_name"]].invoke(args))
