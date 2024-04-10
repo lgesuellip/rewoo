@@ -34,33 +34,33 @@ class Planner:
         if not self._exemplars:
             self._exemplars = self.generate_exemplars_prompt(tools)
 
-        # llm_chain = LLMChain(
-        #     prompt=self._prompt, llm=self._llm, output_parser=PlannerOutputParser()
-        # )
-
-        # self._plans = llm_chain.invoke(
-        #     {
-        #         "query": query,
-        #         "exemplars": self._exemplars,
-        #         "few_shot": self._few_shot,
-        #     }
-        # )
-
-        parser = PlannerOutputParser()
-        self._plans = parser.parse(
-            text=dedent(
-                """
-                Plan : Use Google to search for the 2024 Australian Open winner.
-                #E1 = Google[2024 Australian Open winner]
-                Plan : Retrieve the name of the 2024 Australian Open winner from the search results.
-                #E2 = LLM[What is the name of the 2024 Australian Open winner, given #E1]
-                Plan : Use Google to search for the hometown of the 2024 Australian Open winner.
-                #E3 = Google[hometown of 2024 Australian Open winner, given #E2]
-                Plan : Retrieve the hometown of the 2024 Australian Open winner from the search results.
-                #E4 = LLM[What is the hometown of the 2024 Australian Open winner, given #E3]
-                """
-            )
+        llm_chain = LLMChain(
+            prompt=self._prompt, llm=self._llm, output_parser=PlannerOutputParser()
         )
+
+        self._plans = llm_chain.invoke(
+            {
+                "query": query,
+                "exemplars": self._exemplars,
+                "few_shot": self._few_shot,
+            }
+        )["text"]
+
+        # parser = PlannerOutputParser()
+        # self._plans = parser.parse(
+        #     text=dedent(
+        #         """
+        #         Plan: Use Google to search for the 2024 Australian Open winner.
+        #         #E1 = Google[2024 Australian Open winner]
+        #         Plan: Retrieve the name of the 2024 Australian Open winner from the search results.
+        #         #E2 = LLM[What is the name of the 2024 Australian Open winner, given #E1]
+        #         Plan: Use Google to search for the hometown of the 2024 Australian Open winner.
+        #         #E3 = Google[hometown of 2024 Australian Open winner, given #E2]
+        #         Plan: Retrieve the hometown of the 2024 Australian Open winner from the search results.
+        #         #E4 = LLM[What is the hometown of the 2024 Australian Open winner, given #E3]
+        #         """
+        #     )
+        # )
 
     @classmethod
     def generate_exemplars_prompt(cls, tools: List):
